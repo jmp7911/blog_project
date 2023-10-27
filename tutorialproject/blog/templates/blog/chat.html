@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="ko-KR">
 
@@ -6,8 +7,8 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>채팅</title>
-  <link rel="stylesheet" href="./css/common.css">
-  <link rel="stylesheet" href="./css/chat.css">
+  <link rel="stylesheet" href="{% static 'css/common.css' %}">
+  <link rel="stylesheet" href="{% static 'css/chat.css' %}">
 </head>
 
 <body>
@@ -32,7 +33,7 @@
 
       <div class="chat-screen">
         <div class="ai-chat">
-          <img src="./img/licat.png" alt="licat">
+          <img src="{% static 'img/licat.png' %}" alt="licat">
           <div class="chat-content">반갑습니다. 어떤것이 궁금하신가요?</div>
         </div>
 
@@ -41,23 +42,15 @@
         </div>
 
         <div class="ai-chat">
-          <img src="./img/licat.png" alt="licat">
+          <img src="{% static 'img/licat.png' %}" alt="licat">
           <div class="chat-content">반갑습니다. 어떤것이 궁금하신가요?</div>
         </div>
         <div class="ai-chat">
-          <img src="./img/licat.png" alt="licat">
+          <img src="{% static 'img/licat.png' %}" alt="licat">
           <div class="chat-content">반갑습니다. 어떤것이 궁금하신가요?</div>
         </div>
         <div class="ai-chat">
-          <img src="./img/licat.png" alt="licat">
-          <div class="chat-content">반갑습니다. 어떤것이 궁금하신가요?</div>
-        </div>
-
-        <div class="user-chat">
-          <div class="chat-content">반갑습니다.</div>
-        </div>
-        <div class="ai-chat">
-          <img src="./img/licat.png" alt="licat">
+          <img src="{% static 'img/licat.png' %}" alt="licat">
           <div class="chat-content">반갑습니다. 어떤것이 궁금하신가요?</div>
         </div>
 
@@ -65,7 +58,7 @@
           <div class="chat-content">반갑습니다.</div>
         </div>
         <div class="ai-chat">
-          <img src="./img/licat.png" alt="licat">
+          <img src="{% static 'img/licat.png' %}" alt="licat">
           <div class="chat-content">반갑습니다. 어떤것이 궁금하신가요?</div>
         </div>
 
@@ -73,7 +66,7 @@
           <div class="chat-content">반갑습니다.</div>
         </div>
         <div class="ai-chat">
-          <img src="./img/licat.png" alt="licat">
+          <img src="{% static 'img/licat.png' %}" alt="licat">
           <div class="chat-content">반갑습니다. 어떤것이 궁금하신가요?</div>
         </div>
 
@@ -81,7 +74,7 @@
           <div class="chat-content">반갑습니다.</div>
         </div>
         <div class="ai-chat">
-          <img src="./img/licat.png" alt="licat">
+          <img src="{% static 'img/licat.png' %}" alt="licat">
           <div class="chat-content">반갑습니다. 어떤것이 궁금하신가요?</div>
         </div>
 
@@ -89,7 +82,15 @@
           <div class="chat-content">반갑습니다.</div>
         </div>
         <div class="ai-chat">
-          <img src="./img/licat.png" alt="licat">
+          <img src="{% static 'img/licat.png' %}" alt="licat">
+          <div class="chat-content">반갑습니다. 어떤것이 궁금하신가요?</div>
+        </div>
+
+        <div class="user-chat">
+          <div class="chat-content">반갑습니다.</div>
+        </div>
+        <div class="ai-chat">
+          <img src="{% static 'img/licat.png' %}" alt="licat">
           <div class="chat-content">반갑습니다. 어떤것이 궁금하신가요?</div>
         </div>
 

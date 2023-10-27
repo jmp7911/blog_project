@@ -2,21 +2,31 @@ from django.shortcuts import render
 from django.contrib.auth.views import LoginView, LogoutView
 from django.views.generic import CreateView
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.forms import UserCreationForm
+
 from django.conf import settings
+from .forms import UserJoinForm
 
-# Create your views here.
-signup = CreateView.as_view(
-    form_class = UserCreationForm,
-    #기본 URL을 변경
-    template_name = 'accounts/form.html',
-    #로그인 성공했을 때 보낼 URL
-    success_url = settings.LOGIN_URL,
-)
+class PageTitleViewMixin:
+  title = ""
 
-login = LoginView.as_view(
-    template_name = 'accounts/form.html',
-)
+  def get_title(self):
+    return self.title
+  def get_context_data(self, **kwargs):
+    context = super().get_context_data(**kwargs)
+    context['title'] = self.get_title()
+    return context
+  
+class JoinUser(PageTitleViewMixin, CreateView):
+  title = '회원가입'
+  template_name = 'accounts/join.html'
+  success_url = settings.LOGIN_URL
+  form_class = UserJoinForm
+  
+class loginUser(PageTitleViewMixin, LoginView):
+  title = '로그인'
+  template_name = 'accounts/login.html'
+  
+
 
 logout = LogoutView.as_view(
     next_page = settings.LOGIN_URL,
@@ -25,3 +35,6 @@ logout = LogoutView.as_view(
 @login_required
 def profile(request):
     return render(request, 'accounts/profile.html')
+  
+signup = JoinUser.as_view()
+login = loginUser.as_view()
