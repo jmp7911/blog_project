@@ -67,9 +67,84 @@
 13. **(선택) AWS Lightsail로 배포합니다.**
     - 해당 과제는 개인에게 비용이 청구될 수 있습니다. 따라서 선택사항이지만 꼭 배포하여 운영까지 해보시는 것을 권해드립니다.
 ---
+### WBS
+```mermaid
+gantt
+    dateFormat  YYYY-MM-DD
+    title       Django 기술블로그 
+    excludes    weekends
+    %% (`excludes` accepts specific dates in YYYY-MM-DD format, days of the week ("sunday") or "weekends", but not the word "weekdays".)
+
+    section 전체
+    요구사항 분석            :done,    des1, 2023-10-26, 0d
+    데이터베이스 설계         :done,  des2, 2023-10-26, 0d
+    개발                   :active, des3, after des2, 6d
+    프레젠테이션             :        des4, after des3, 2d
+
+    section 개발
+    회원가입 기능 구현        :done,    dev1, after des2, 0d
+    로그인 기능 구현           :done, 1d
+    게시글 CRUD 구현        :crit, active, 2d
+    게시글 검색 기능            :1d
+    회원 관련 추가 기능        :1d
+    댓글 기능                :1d
+    부가 기능                :1d
+    메인페이지 및 테마 구현     :1d
+```
+---
 ### 프로젝트 구조
 ---
 ### 데이터베이스 구조
+```mermaid
+erDiagram
+    user ||--o{ post : write
+    user {
+      integer id PK
+      varchar username
+      varchar password
+      image profile_image
+      datetime created_at
+      varchar ip_address
+      datetime last_login
+    }
+    post }|--|{ tag : contains
+    post ||--o| category : has
+    post {
+      integer id PK
+      varchar title
+      text content
+      file file_upload
+      image image_upload
+      datetime created_at
+      datetime updated_at
+      varchar writer
+      integer user_id FK
+      integer hits
+      integer tags FK
+      varchar category FK
+    }
+    post ||--o{ comment : contains
+    comment {
+      integer id PK
+      integer parent
+      text comment
+      integer comment_order
+      integer comment_reply
+      datetime created_at
+      datetime updated_at
+    }
+    
+    tag {
+      integer id PK
+      varchar name
+    }
+    
+    
+    category {
+      integer id PK
+      varchar name
+    }
+```
 ---
 ### 기능명세서
 ---
