@@ -25,8 +25,13 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.humanize',
+    # 커스텀 앱
     'blog.apps.BlogConfig',
-    'accounts.apps.AccountsConfig'
+    'accounts.apps.AccountsConfig',
+    # 외부 라이브러리
+    'markdown',
+    'django_summernote',
 ]
 
 AUTH_USER_MODEL = 'accounts.User'  # 추가

@@ -1,9 +1,31 @@
+import logging
 from django.db import models
 from django.conf import settings
+from django.urls import reverse
+from abc import abstractmethod
+from django.utils.translation import gettext_lazy as _
+
 
 User = settings.AUTH_USER_MODEL
+logger = logging.getLogger(__name__)
 
-# Create your models here.
+class BaseModel(models.Model):
+    def save(self, *args, **kwargs):
+        is_update_views = isinstance(
+            self,
+            Post) and 'update_fields' in kwargs and kwargs['update_fields'] == ['hits']
+        if is_update_views:
+            Post.objects.filter(pk=self.pk).update(hits=self.hits)
+        else:
+            super().save(*args, **kwargs)
+    
+    class Meta:
+        abstract = True
+
+    @abstractmethod
+    def get_absolute_url(self):
+        pass
+      
 class Category(models.Model):
   name = models.CharField(max_length=100, unique=True)
   
@@ -16,15 +38,14 @@ class Tag(models.Model):
   def __str__(self):
     return self.name
 
-class Post(models.Model):
+class Post(BaseModel):
   title = models.CharField(max_length=100)
   content = models.TextField()
   image_upload = models.ImageField(upload_to='blog/%Y/%m/%d/', blank=True, null=True)
   file_upload = models.FileField(upload_to='file/%Y/%m/%d/', blank=True, null=True)
   created_at = models.DateTimeField(auto_now_add=True)
   updated_at = models.DateTimeField(auto_now=True)
-  # user = models.ForeignKey(User, on_delete=models.CASCADE)
-  writer = models.CharField(max_length=100)
+  user = models.ForeignKey(User, on_delete=models.CASCADE, default='')
   hits = models.IntegerField(default=0)
   category = models.ForeignKey(Category, blank=True, null=True ,on_delete=models.CASCADE)
   tags = models.ManyToManyField(Tag, blank=True)
@@ -35,6 +56,9 @@ class Post(models.Model):
   def increase_views(self):
     self.hits += 1
     self.save(update_fields=['hits'])
+  
+  def get_absolute_url(self):
+    return reverse('view', kwargs={'pk':self.pk})
     
     
 class Comment(models.Model):
