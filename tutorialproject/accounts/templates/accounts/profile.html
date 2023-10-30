@@ -1,4 +1,6 @@
 <p>프로필</p>
 <p>{{ user }}</p>
 <p>{{ user.nickname }}</p>
+{% if user.profile_image %}
 <img src="{{ user.profile_image.url }}"></img>
+{% endif %}

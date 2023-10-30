@@ -1,0 +1,154 @@
+{% extends "blog/base.html" %}
+{% load static %}
+{% load humanize %}
+{% block 'contents' %}
+  <div class="main">
+    <h2 class="main-title">게시판</h2>
+
+    <div class="board-top">
+      <p class="main-desc"><strong>{{ count }} 개</strong>의 게시글이 있습니다.</p>
+
+      <div>
+        <label for="category" class="a11y-hidden">카테고리</label>
+        <form class="search-form">
+          <select name="category" id="category">
+            <option value="">전체</option>
+            {% for cate in category %}
+            <option value="{{cate.id}}" {% if cate.is_sel_category %}selected{% endif %}>{{cate}}</option>
+            {% endfor %}
+          </select>
+        
+          <label for="search" class="a11y-hidden">검색</label>
+          <input id="search" type="search" name="search" value="{{search}}" placeholder="검색어를 입력해주세요" >
+          <button type="submit">
+            <img src="{% static 'img/icon-search.png' %}" alt="검색">
+          </button>
+          <label for="sort" class="a11y-hidden">정렬</label>
+          <select id="sort" name="sort" onchange="form.submit()">
+            <option value="hits">조회순</option>
+            <option value="created_at">최신순</option>
+          </select>
+        </form>
+
+      </div>
+    </div>
+
+
+    <!-- 게시판 리스트 -->
+    <table class="table list">
+      <colgroup>
+        <col style="width: 40px">
+        <col style="width: 60px">
+        <col>
+        <col style="width: 100px">
+        <col style="width: 120px">
+        <col style="width: 100px">
+      </colgroup>
+      <thead>
+        <tr>
+          <th>
+            <input type="checkbox" id="all-article">
+            <!-- <label for="all-article">페이지 전체 게시글 선택</label> -->
+          </th>
+          <th>번호</th>
+          <th>제목</th>
+          <th>작성자</th>
+          <th>작성일</th>
+          <th>조회수</th>
+        </tr>
+      </thead>
+      <form action="" method="post">
+        <tbody>
+          <!-- 게시글이 없을때 / 검색한 게시글이 없을때 -->
+          {% if not post_list %}
+          <tr>
+            <td class="nodata" colspan="5">등록된 게시물이 없습니다.</td>
+          </tr>
+          {% else %}
+          <!-- 게시글이 있을때 -->
+            {% for post in post_list %}
+              <tr>
+                <td>
+                  <input type="checkbox" class="post_check" value="{{post}}">
+                  <!-- <label for="check1">2번 게시글</label> -->
+                </td>
+                <td>{{ post.id }}</td>
+                <td>
+                  <a href="{{post.get_absolute_url}}">{{post.title}}
+                  </a>
+                </td>
+                <td>{{post.user.nickname}}</td>
+                <td>{{post.created_at|date:'Y.m.d'}}</td>
+                <td>{{post.hits|intcomma}}</td>
+              </tr>
+            {% endfor %}
+          {% endif %}
+        </tbody>
+      </form>
+    </table>
+    <!-- //게시판 리스트 -->
+    <div class="board-bottom">
+      <!-- 페이지 -->
+      {% block pagination %}
+      {% if is_paginated %}
+          <div class="pagination">
+            <a href="#"><img src="{% static 'img/first.png' %}" alt="첫번째 페이지"></a>  
+            {% if page_obj.has_previous %}
+              <a href="{{ request.path }}?page={{ page_obj.previous_page_number }}"><img src="{% static 'img/prev.png' %}" alt="이전 페이지"></a>
+            {% endif %}
+            <span class="page-current">
+                Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+            </span>
+            {% if page_obj.has_next %}
+              <a href="{{ request.path }}?page={{ page_obj.next_page_number }}"><img src="{% static 'img/next.png' %}" alt="다음 페이지"></a>
+            {% endif %}
+        
+          </div>
+      {% endif %}
+    {% endblock pagination %}
+      <!-- //페이지 -->
+      <div class="btn-group">
+        {% if user.is_staff %}
+        <button class="btn" type="button" onclick="sel_delete()">선택삭제</button>
+        {% endif %}
+        <a href="{% url "write" %}" class="btn">글쓰기</a>
+      </div>
+    </div>
+  </div>
+  <script>
+    document.getElementById('all-article').addEventListener('click', function() {
+      if (this.checked) {
+        document.querySelectorAll('.post_check').forEach((item, index) => {
+          item.checked = true
+        })
+      } else {
+        document.querySelectorAll('.post_check').forEach((item, index) => {
+          item.checked = false
+        })
+      }
+    })
+    function sel_delete() {
+      ids = []
+      document.querySelectorAll('.post_check:checked').forEach((item, index) => {
+        ids.push(item.value)
+      })
+      
+      
+      if (ids.length < 1) {
+        alert('선택 삭제할 항목이 없습니다.')
+        return;
+      }
+      $.ajax({
+        url: '{% url "deleteMultiple" %}',
+        type: 'POST',
+        data: {'data': ids, 'csrfmiddlewaretoken': '{{ csrf_token }}' },
+        success: function() {
+          console.log('success')
+        }, error: function(xhr,errmsg,err) {
+          console.log(xhr.status + ": " + xhr.responseText); 
+        }
+      })
+      
+    }
+  </script>
+{% endblock 'contents' %}

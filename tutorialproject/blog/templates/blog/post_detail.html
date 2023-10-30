@@ -1,0 +1,38 @@
+{% extends "blog/base.html" %}
+{% block 'contents' %}
+
+
+
+  <div class="main">
+
+
+    <h2 class="main-title">글 조회</h2>
+
+
+    <div class="view">
+      <div class="view-header">
+        <h2><p>{{post.title}}</p></h2>
+        <div class="view-info">
+          <p>작성자: {{post.user}}</p>|
+          <p>작성일: {{post.created_at}}</p>|
+          <p>조회수: {{post.hits}}</p>
+        </div>
+      </div>
+      <div class="view-content">
+        {% if post.image_upload %}
+        <img src="{{post.image_upload.url}}" alt="">
+        {% endif %}
+
+        
+
+        {{post.content}}
+      </div>
+    </div>
+    <div class="btn-group">
+      <a href="{% url "blog" %}" class="btn">목록</a>
+      <a href="{% url "update" post.id %}" class="btn">수정</a>
+      <a href="{% url "delete" post.id %}" class="btn">삭제</a>
+    </div>
+
+  </div>
+{% endblock 'contents' %}
