@@ -51,6 +51,13 @@ body {
 .header h1 a {
 	color: black;
 }
+.header-click {
+  display: flex;
+  align-items: center;
+}
+.header-click img{
+  width: 50px;
+}
 .header-click a,
 .header-click button {
 	padding: 10px 15px;

@@ -1,6 +1,47 @@
-<p>프로필</p>
-<p>{{ user }}</p>
-<p>{{ user.nickname }}</p>
-{% if user.profile_image %}
-<img src="{{ user.profile_image.url }}"></img>
-{% endif %}
+{% extends "accounts/base.html" %}
+{% block 'contents' %}
+
+<div class="main">
+  <div class="container">
+    <h2 class="title">프로필</h2>
+    <p class="description">
+      
+    </p>
+    
+    <form action="" method="post" enctype="multipart/form-data" class="login">
+        {% csrf_token %}
+        <div>
+          <label class="label-width" for="user-email">{{form.email.label}}</label>
+          <input type="text" name="email" value="{{object.email}}" readonly>
+        </div>
+        <div>
+          {{form.errors.email}}
+        </div>
+        <div>
+          <label class="label-width" for="user-nick">{{form.nickname.label}}</label>
+          {{form.nickname}}
+        </div>
+        <div>
+          {{form.errors.nickname}}
+        </div>
+        <div>
+          <label class="label-width" for="user-nick">{{form.profile_image.label}}</label>
+          <div>
+            {{form.profile_image}}
+          </div>
+        </div>
+        <div>
+          {{form.errors.profile_image}}
+        </div>
+        <div>
+          <label class="label-width" for="user-nick">{{form.password.label}}</label>
+          <p>비밀번호를 수정하려면 <a href="{% url "password_change" user.id %}">여기</a><br>에서 수정할 수 있습니다.</p>
+        </div>
+        
+        <button class="submit-button" type="submit">변경</button>
+    </form>
+    
+  </div>
+</div>
+{% endblock 'contents' %}
+

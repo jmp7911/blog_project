@@ -29,6 +29,7 @@ INSTALLED_APPS = [
     # 커스텀 앱
     'blog.apps.BlogConfig',
     'accounts.apps.AccountsConfig',
+    'main.apps.MainConfig',
     # 외부 라이브러리
     'markdown',
     'django_summernote',
@@ -118,6 +119,9 @@ LOGIN_URL = '/accounts/login/'
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
+
+#프로필 기본사진 경로
+DEFAULT_PROFILE_PATH = '/static/img/default_user.jpg'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
