@@ -78,17 +78,18 @@ gantt
     section 전체
     요구사항 분석            :done,    des1, 2023-10-26, 0d
     데이터베이스 설계         :done,  des2, 2023-10-26, 0d
-    개발                   :active, des3, after des2, 6d
+    개발                   :active, des3, after des2, 7d
     프레젠테이션             :        des4, after des3, 2d
 
     section 개발
     회원가입 기능 구현        :done,    dev1, after des2, 0d
     로그인 기능 구현           :done, 1d
     게시글 CRUD 구현        :done,crit, 2d
-    게시글 검색 기능            :done,1d
+    게시글 검색 기능            :done,0d
     회원 관련 추가 기능        :done,1d
     댓글 기능                :active,1d
-    부가 기능                :1d
+    부가 기능                :12h
+    마크다운 기능            :12h
     메인페이지 및 테마 구현     :1d
 ```
 ---
