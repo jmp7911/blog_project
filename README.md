@@ -87,7 +87,7 @@ gantt
     게시글 CRUD 구현        :done,crit, 2d
     게시글 검색 기능            :done,1d
     회원 관련 추가 기능        :done,1d
-    댓글 기능                :1d
+    댓글 기능                :active,1d
     부가 기능                :1d
     메인페이지 및 테마 구현     :1d
 ```
