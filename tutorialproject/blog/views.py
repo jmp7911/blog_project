@@ -102,7 +102,7 @@ class BoardView(PageTitleViewMixin, DetailView):
   
   def get(self, request, *args, **kwargs):
     response = super(BoardView, self).get(request, *args, **kwargs)
-
+    #조회수 반영
     self.object.increase_views()
 
     return response

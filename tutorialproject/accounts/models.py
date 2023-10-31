@@ -1,6 +1,9 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, UserManager, PermissionsMixin
 
+from django.conf import settings
+from django.utils.safestring import mark_safe
+
 class CustomUserManager(UserManager):
     def _create_user(self, email, password, **extra_fields):
         if not email:
@@ -60,6 +63,12 @@ class User(AbstractBaseUser, PermissionsMixin):
     
     def get_full_name(self):
       return self.email
+    
+    def get_image_tag(self):
+      if not self.profile_image:
+        return mark_safe(u'<img class="profile_image" src="%s" width="300"/>' % settings.DEFAULT_PROFILE_PATH)
+      else:
+        return mark_safe(u'<img class="profile_image" src="%s" width="300"/>' % self.profile_image.url)
     
     class Meta:
       verbose_name = '사용자'

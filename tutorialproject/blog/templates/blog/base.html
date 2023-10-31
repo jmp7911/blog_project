@@ -7,7 +7,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>{{title}}</title>
-  <link rel="stylesheet" href="{% static 'css/common.css' %}">
+  <link rel="stylesheet" href="{% static 'css/common.css' %}?1">
   <link rel="stylesheet" href="{% static 'css/table.css' %}">
   <link rel="stylesheet" href="{% static 'css/write.css' %}">
   <link rel="stylesheet" href="{% static 'css/list.css' %}">
@@ -18,12 +18,12 @@
 <body>
   <!-- header -->
   <div class="header">
-    <h1><a href="index.html">HTML/CSS 실습</a></h1>
+    <h1><a href="{% url "blog" %}">Blog</a></h1>
     <div class="header-click">
-      <a href="{% url "chat" %}">채팅</a>
       {% if user.is_authenticated %}
-      <a href="{% url "profile" %}">정보수정</a>
+      <a href="{% url "profile" user.id %}">정보수정</a>
       <a href="{% url "logout" %}">로그아웃</a>
+      {{user.get_image_tag}}
       {% else %}
       <a href="{% url "login" %}">로그인</a>
       <a href="{% url "signup" %}">회원가입</a>
