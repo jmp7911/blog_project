@@ -44,7 +44,7 @@ class BoardList(PageTitleViewMixin, ListView):
     # request의 GET 파라미터에서 'q'를 가져옵니다.
     search = self.request.GET.get('search', '')
     sel_category = self.request.GET.get('category', '')
-        
+    sort = self.request.GET.get('sort', '')
     context = super().get_context_data(**kwargs)
     count = len(self.object_list)
     category = Category.objects.all()
@@ -57,7 +57,7 @@ class BoardList(PageTitleViewMixin, ListView):
     
     context['count'] = count
     context['category'] = category
-    
+    context['sort'] = sort
     return context
   
   def get_queryset(self):
@@ -70,7 +70,7 @@ class BoardList(PageTitleViewMixin, ListView):
     q = Q()
     # 'q' 파라미터가 제공되었을 경우, 쿼리셋을 필터링합니다.
     if search:
-      q &= (Q(title__icontains=q) | Q(content__icontains=q))
+      q &= (Q(title__icontains=search) | Q(content__icontains=search))
     if cate:
       q &= Q(category=cate)
       

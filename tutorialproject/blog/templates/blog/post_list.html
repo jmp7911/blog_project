@@ -25,15 +25,13 @@
           </button>
           <label for="sort" class="a11y-hidden">정렬</label>
           <select id="sort" name="sort" onchange="form.submit()">
-            <option value="hits">조회순</option>
-            <option value="created_at">최신순</option>
+            <option value="hits" {% if sort == 'hits' %}selected{% endif %}>조회순</option>
+            <option value="created_at" {% if sort == 'created_at' %}selected{% endif %}>최신순</option>
           </select>
         </form>
 
       </div>
     </div>
-
-
     <!-- 게시판 리스트 -->
     <table class="table list">
       <colgroup>
@@ -57,7 +55,7 @@
           <th>조회수</th>
         </tr>
       </thead>
-      <form action="" method="post">
+      {% block postList %}
         <tbody>
           <!-- 게시글이 없을때 / 검색한 게시글이 없을때 -->
           {% if not post_list %}
@@ -69,7 +67,7 @@
             {% for post in post_list %}
               <tr>
                 <td>
-                  <input type="checkbox" class="post_check" value="{{post}}">
+                  <input type="checkbox" class="post_check" value="{{post.id}}">
                   <!-- <label for="check1">2번 게시글</label> -->
                 </td>
                 <td>{{ post.id }}</td>
@@ -84,7 +82,7 @@
             {% endfor %}
           {% endif %}
         </tbody>
-      </form>
+        {% endblock postList %}
     </table>
     <!-- //게시판 리스트 -->
     <div class="board-bottom">
@@ -143,7 +141,7 @@
         type: 'POST',
         data: {'data': ids, 'csrfmiddlewaretoken': '{{ csrf_token }}' },
         success: function() {
-          console.log('success')
+          window.location.reload()
         }, error: function(xhr,errmsg,err) {
           console.log(xhr.status + ": " + xhr.responseText); 
         }
