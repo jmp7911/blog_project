@@ -63,8 +63,8 @@ class Post(BaseModel):
     
 class Comment(models.Model):
   post = models.ForeignKey(Post, on_delete=models.CASCADE)
+  comment_reply = models.ForeignKey('self', null=True, blank=True, on_delete=models.CASCADE)
   comment_order = models.IntegerField(null=True, blank=True)
-  comment_reply = models.IntegerField(null=True, blank=True)
   user = models.ForeignKey(User, on_delete=models.CASCADE)
   content = models.TextField()
   created_at = models.DateTimeField(auto_now_add=True)

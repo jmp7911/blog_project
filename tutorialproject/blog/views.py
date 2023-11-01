@@ -9,10 +9,10 @@ from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.contrib.auth.models import Permission
 from django.contrib.contenttypes.models import ContentType
 from django.utils.text import slugify
-# from .forms import PostForm
+from .forms import PostForm, CommentForm
 from django.urls import reverse_lazy
 
-from .models import Post, Category, Tag
+from .models import Post, Category, Tag, Comment
 from django.conf import settings
 import markdown
 from django.utils.safestring import mark_safe
@@ -86,8 +86,8 @@ class BoardWrite(PageTitleViewMixin, CreateView):
   permission_required = 'blog.add_post'
   title = '게시글 작성'
   model = Post
-  fields = ['title', 'content', 'file_upload', 'image_upload', 'tags', 'category']
   context_object_name = 'post'
+  fields = ['title', 'content', 'file_upload', 'image_upload', 'tags', 'category']
   
 class BoardUpdate(PageTitleViewMixin, PermissionRequiredMixin, UpdateView):
   permission_required = 'blog.change_post'
@@ -100,12 +100,34 @@ class BoardView(PageTitleViewMixin, DetailView):
   model = Post
   context_object_name = 'post'
   
+  def get_context_data(self, **kwargs):
+    context = super().get_context_data(**kwargs)
+    context['comment_form'] = CommentForm()
+    post = super(BoardView, self).get_object(queryset=None)
+    comments = Comment.objects.filter(post=post.id)
+    context['comments'] = comments
+    return context
   def get(self, request, *args, **kwargs):
     response = super(BoardView, self).get(request, *args, **kwargs)
     #조회수 반영
     self.object.increase_views()
-
+      
     return response
+  def post(self, request, *args, **kwargs):
+    post = super(BoardView, self).get_object(queryset=None)
+    comment_form = CommentForm(request.POST)
+    
+    if comment_form.is_valid():
+      comment = comment_form.save(commit=False)
+      comment.post = post
+      comment.user = request.user
+      
+      comment.save()
+      
+      return redirect('blog')
+    else:
+      return redirect('blog')
+    
   def get_object(self, queryset=None):
     post = super(BoardView, self).get_object(queryset=None)
     md = markdown.Markdown(extensions=[
@@ -141,7 +163,8 @@ class BoardDeleteMultiple(View):
       
       Post.objects.filter(id__in=data).delete()
     return redirect('blog')
-  
+
+
 index = BoardList.as_view()
 write = login_required(BoardWrite.as_view())
 update = BoardUpdate.as_view()
