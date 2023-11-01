@@ -55,7 +55,7 @@ body {
   display: flex;
   align-items: center;
 }
-.header-click img{
+img.profile_image{
   width: 50px;
 }
 .header-click a,
