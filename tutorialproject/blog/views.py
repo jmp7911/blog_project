@@ -3,13 +3,14 @@ from django.views import View
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views.generic import CreateView, UpdateView, DetailView, DeleteView
 from django.views.generic.list import ListView
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib.auth import get_user_model
-from django.contrib.auth.mixins import PermissionRequiredMixin
+from django.contrib.auth.mixins import PermissionRequiredMixin, UserPassesTestMixin
+from django.views.generic.edit import FormMixin
 from django.contrib.auth.models import Permission
 from django.contrib.contenttypes.models import ContentType
 from django.utils.text import slugify
-from .forms import PostForm, CommentForm
+from .forms import PostForm, CommentForm, CommentReplyForm, PostFormViewer
 from django.urls import reverse_lazy
 
 from .models import Post, Category, Tag, Comment
@@ -82,40 +83,62 @@ class BoardList(PageTitleViewMixin, ListView):
     return ordering
     
 class BoardWrite(PageTitleViewMixin, CreateView):
-  # form_class = PostForm
+  form_class = PostForm
   permission_required = 'blog.add_post'
   title = '게시글 작성'
   model = Post
   context_object_name = 'post'
-  fields = ['title', 'content', 'file_upload', 'image_upload', 'tags', 'category']
+  def form_valid(self, form):
+    post = form.save(commit=False)
+    post.user = self.request.user
+    post.save()
+    return super().form_valid(form)
   
+ 
 class BoardUpdate(PageTitleViewMixin, PermissionRequiredMixin, UpdateView):
   permission_required = 'blog.change_post'
+  form_class = PostForm
   title = '게시글 수정'
   model = Post
-  fields = ['title', 'content', 'file_upload', 'image_upload', 'tags', 'category']
   context_object_name = 'post'
+  
 class BoardView(PageTitleViewMixin, DetailView):
   title = '게시글 보기'
   model = Post
   context_object_name = 'post'
+  form_class = PostFormViewer
   
   def get_context_data(self, **kwargs):
-    context = super().get_context_data(**kwargs)
+    context = super(BoardView, self).get_context_data(**kwargs)
+    if self.request.GET.get('comment'):
+      comment = Comment.objects.get(id=self.request.GET.get('comment'))
+      context['comment_reply_form'] = CommentReplyForm()
+      context['comment_reply_form'].fields['comment_reply'].initial = comment.id
+      context['comment_id'] = comment.id
+    
+      
     context['comment_form'] = CommentForm()
     post = super(BoardView, self).get_object(queryset=None)
+    context['form'] = PostFormViewer(initial={'content':post.content})
     comments = Comment.objects.filter(post=post.id)
     context['comments'] = comments
     return context
   def get(self, request, *args, **kwargs):
     response = super(BoardView, self).get(request, *args, **kwargs)
+    if request.GET.get('comment') and not request.user.is_authenticated:
+      return redirect('login')
     #조회수 반영
     self.object.increase_views()
-      
+
     return response
+  
   def post(self, request, *args, **kwargs):
     post = super(BoardView, self).get_object(queryset=None)
-    comment_form = CommentForm(request.POST)
+    if self.request.POST.get('comment_reply'):
+      comment_form = CommentReplyForm(request.POST)
+    else:
+      comment_form = CommentForm(request.POST)
+      
     
     if comment_form.is_valid():
       comment = comment_form.save(commit=False)
@@ -127,17 +150,7 @@ class BoardView(PageTitleViewMixin, DetailView):
       return redirect('blog')
     else:
       return redirect('blog')
-    
-  def get_object(self, queryset=None):
-    post = super(BoardView, self).get_object(queryset=None)
-    md = markdown.Markdown(extensions=[
-        'markdown.extensions.extra',
-        'markdown.extensions.codehilite',
-        TocExtension(slugify=slugify),
-    ])
-    post.content = md.convert(post.content)
-    post.toc = md.toc
-    return post
+  
   
 class BoardDelete(PageTitleViewMixin, PermissionRequiredMixin, DeleteView):
   permission_required = "blog.delete_post"

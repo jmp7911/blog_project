@@ -30,6 +30,7 @@ INSTALLED_APPS = [
     'blog.apps.BlogConfig',
     'accounts.apps.AccountsConfig',
     'main.apps.MainConfig',
+    'django_tuieditor.apps.DjangoTUIEditorConfig',
     # 외부 라이브러리
     'markdown',
     'django_summernote',
@@ -40,6 +41,7 @@ AUTH_USER_MODEL = 'accounts.User'  # 추가
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.middleware.locale.LocaleMiddleware',        # (중요) 정해진 위치에 삽입해줍니다.
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -109,6 +111,12 @@ USE_I18N = True
 
 USE_TZ = True
 
+LANGUAGES = [        # 사용하고자 하는 언어를 모두 적어줍니다.
+    ('ko', 'Korean'),
+    ('en', 'English'),
+]
+
+LOCALE_PATHS = [BASE_DIR / 'locale']        
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
