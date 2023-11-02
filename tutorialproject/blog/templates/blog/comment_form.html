@@ -1,0 +1,32 @@
+{% if comments %}
+  {% for comment in comments %}
+    {% if not comment.comment_reply %}
+    <!-- Single Comment -->
+    <div class="media mb-4">
+      <div class="media-body">
+        <h5>{{comment.user.get_image_tag}}<a href="{{post.get_absolute_url}}?comment={{comment.id}}">Reply</a></h5>
+        <h5 class="mt-0">{{comment.user}}</h5>
+        <h5 class="mt-0">{{comment.created_at}}</h5>
+        <h5 class="mt-0">{{comment.content}}</h5>
+        
+        {% for reply in comment.replies.all %}
+          {% include 'blog/recursive_comment.html' with comment=reply %}
+        {% endfor %}
+      
+      </div>
+      {% if comment_id == comment.id %}
+      <div class="card my-4">
+        <h5 class="card-header">Leave a Comment:</h5>
+        <div class="card-body">
+            <form method="POST">
+              {% csrf_token %}
+              <div class="form-group">{{ comment_reply_form }}</div>
+              <button type="submit" class="btn btn-primary">Submit</button>
+            </form>
+        </div>
+      </div>
+      {% endif %}
+    </div>
+    {% endif %}
+  {% endfor %}
+{% endif %}

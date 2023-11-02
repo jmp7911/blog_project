@@ -4,7 +4,8 @@ from django.conf import settings
 from django.urls import reverse
 from abc import abstractmethod
 from django.utils.translation import gettext_lazy as _
-
+from django_tuieditor.models import MarkdownField
+from django_tuieditor.widgets import MarkdownEditorWidget
 
 User = settings.AUTH_USER_MODEL
 logger = logging.getLogger(__name__)
@@ -40,7 +41,7 @@ class Tag(models.Model):
 
 class Post(BaseModel):
   title = models.CharField(max_length=100)
-  content = models.TextField()
+  content = MarkdownField()
   image_upload = models.ImageField(upload_to='blog/%Y/%m/%d/', blank=True, null=True)
   file_upload = models.FileField(upload_to='file/%Y/%m/%d/', blank=True, null=True)
   created_at = models.DateTimeField(auto_now_add=True)
@@ -59,11 +60,11 @@ class Post(BaseModel):
   
   def get_absolute_url(self):
     return reverse('view', kwargs={'pk':self.pk})
-    
+  
     
 class Comment(models.Model):
   post = models.ForeignKey(Post, on_delete=models.CASCADE)
-  comment_reply = models.ForeignKey('self', null=True, blank=True, on_delete=models.CASCADE)
+  comment_reply = models.ForeignKey('self', null=True, blank=True, on_delete=models.CASCADE, related_name='replies')
   comment_order = models.IntegerField(null=True, blank=True)
   user = models.ForeignKey(User, on_delete=models.CASCADE)
   content = models.TextField()

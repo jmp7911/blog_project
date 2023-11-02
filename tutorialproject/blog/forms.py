@@ -3,16 +3,26 @@ from django.conf import settings
 from .models import Post, Comment
 from django.db import models
 from django_summernote.widgets import SummernoteWidget
+from django_tuieditor.widgets import MarkdownEditorWidget, MarkdownViewerWidget, StaticMarkdownViewerWidget
+from django_tuieditor.models import MarkdownField
 
 class PostForm(forms.ModelForm):
-  
+  content = MarkdownField(blank=True, null=True)
   class Meta:
     model = Post
     fields = ['title', 'content', 'file_upload', 'image_upload', 'tags', 'category']
     widgets = {
-      'content': SummernoteWidget(attrs={'summernote': {'width': '100%', 'height': '400px'}}),
+      'content': MarkdownEditorWidget()
     }
 
+class PostFormViewer(forms.ModelForm):
+  content = MarkdownField(blank=True, null=True)
+  class Meta:
+    model = Post
+    fields = ['title', 'content', 'file_upload', 'image_upload', 'tags', 'category']
+    widgets = {
+      'content': StaticMarkdownViewerWidget()
+    }
 class CommentForm(forms.ModelForm):
     class Meta:
       model = Comment
@@ -21,3 +31,14 @@ class CommentForm(forms.ModelForm):
       widgets = {
           'content': forms.Textarea(attrs={'class': 'form-control', 'rows': 4, 'cols': 40})
       }
+
+class CommentReplyForm(forms.ModelForm):
+    class Meta:
+      model = Comment
+
+      fields = ['comment_reply','content']
+      widgets = {
+          'comment_reply': forms.HiddenInput(),
+          'content': forms.Textarea(attrs={'class': 'form-control', 'rows': 4, 'cols': 40})
+      }
+      
