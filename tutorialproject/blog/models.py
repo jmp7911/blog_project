@@ -42,8 +42,8 @@ class Tag(models.Model):
 class Post(BaseModel):
   title = models.CharField(max_length=100)
   content = MarkdownField()
-  image_upload = models.ImageField(upload_to='blog/%Y/%m/%d/', blank=True, null=True)
-  file_upload = models.FileField(upload_to='file/%Y/%m/%d/', blank=True, null=True)
+  image_upload = models.ImageField(verbose_name='이미지',upload_to='blog/%Y/%m/%d/', blank=True, null=True)
+  file_upload = models.FileField(verbose_name='파일',upload_to='file/%Y/%m/%d/', blank=True, null=True)
   created_at = models.DateTimeField(auto_now_add=True)
   updated_at = models.DateTimeField(auto_now=True)
   user = models.ForeignKey(User, on_delete=models.CASCADE, default='')

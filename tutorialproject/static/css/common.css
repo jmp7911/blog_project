@@ -109,18 +109,6 @@ img.profile_image{
 	margin-top: 20px;
 	text-align: right;
 }
-.btn {
-	background-color: #eee;
-	width: 80px;
-	height: 32px;
-	border: 1px solid #ddd;
-	border-radius: 4px;
-	display: inline-flex;
-	align-items: center;
-	justify-content: center;
-	box-sizing: border-box;
-	font: inherit;
-}
 
 /* 텍스트 숨김처리를 위한 CSS */
 .a11y-hidden {
@@ -132,4 +120,8 @@ img.profile_image{
 	overflow: hidden;
 	padding: 0;
 	position: absolute;
+}
+
+.flex-1 {
+	flex: 1 1 0;
 }

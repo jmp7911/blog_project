@@ -12,7 +12,34 @@ class PostForm(forms.ModelForm):
     model = Post
     fields = ['title', 'content', 'file_upload', 'image_upload', 'tags', 'category']
     widgets = {
-      'content': MarkdownEditorWidget()
+      'title': forms.TextInput(
+        attrs={
+          'class': 'form-control',
+          'placeholder': '제목을 입력하세요'
+        }
+      ),
+      'content': MarkdownEditorWidget(),
+      'image_upload': forms.ClearableFileInput(
+        attrs={
+          'class': 'form-control',
+
+        }
+      ),
+      'file_upload': forms.ClearableFileInput(
+        attrs={
+          'class': 'form-control',
+        }
+      ),
+      'tags': forms.SelectMultiple(
+        attrs={
+          'class': 'form-select'
+        }
+      ),
+      'category': forms.Select(
+        attrs={
+          'class': 'form-select'
+        }
+      )
     }
 
 class PostFormViewer(forms.ModelForm):

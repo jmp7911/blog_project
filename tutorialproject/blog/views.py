@@ -18,13 +18,9 @@ from django.conf import settings
 import markdown
 from django.utils.safestring import mark_safe
 from markdown.extensions.toc import TocExtension
-from django.db.models import Q
+from django.db.models import Q, Count
 from django.views.decorators.csrf import csrf_exempt
 
-# content_type = ContentType.objects.get_for_model(Post)
-# post_permission = Permission.objects.filter(content_type=content_type)
-# print([perm.codename for perm in post_permission])
-# ['add_post', 'change_post', 'delete_post', 'view_post']
 class PageTitleViewMixin:
   title = ""
 
@@ -38,7 +34,7 @@ class PageTitleViewMixin:
 class BoardList(PageTitleViewMixin, ListView):
   title = '게시글 목록'
   model = Post
-  paginate_by = 5
+  paginate_by = 6
   context_object_name = 'post_list'
   
   def get_context_data(self, **kwargs):
@@ -49,8 +45,7 @@ class BoardList(PageTitleViewMixin, ListView):
     context = super().get_context_data(**kwargs)
     count = len(self.object_list)
     category = Category.objects.all()
-    
-    
+
     if search:
       context['search'] = search
     if sel_category:
@@ -59,10 +54,11 @@ class BoardList(PageTitleViewMixin, ListView):
     context['count'] = count
     context['category'] = category
     context['sort'] = sort
+
     return context
   
   def get_queryset(self):
-    queryset = super().get_queryset()
+    queryset = super().get_queryset().annotate(number_of_comments=Count('comment'))
 
     # request의 GET 파라미터에서 'q'를 가져옵니다.
     search = self.request.GET.get('search', '')
@@ -74,14 +70,14 @@ class BoardList(PageTitleViewMixin, ListView):
       q &= (Q(title__icontains=search) | Q(content__icontains=search))
     if cate:
       q &= Q(category=cate)
-      
+
     return queryset.filter(q)
   
   def get_ordering(self):
     sort = self.request.GET.get('sort', 'created_at')
     ordering = ['-'+sort]
     return ordering
-    
+
 class BoardWrite(PageTitleViewMixin, CreateView):
   form_class = PostForm
   permission_required = 'blog.add_post'
@@ -147,10 +143,15 @@ class BoardView(PageTitleViewMixin, DetailView):
       
       comment.save()
       
-      return redirect('blog')
+      return redirect(post.get_absolute_url())
     else:
       return redirect('blog')
-  
+
+  def get_object(self, queryset=None):
+    post = super(BoardView, self).get_object(queryset=None)
+    if post.file_upload:
+      post.file_upload = str(post.file_upload).split('/')[-1]
+    return post
   
 class BoardDelete(PageTitleViewMixin, PermissionRequiredMixin, DeleteView):
   permission_required = "blog.delete_post"
@@ -162,9 +163,6 @@ class BoardDelete(PageTitleViewMixin, PermissionRequiredMixin, DeleteView):
   def get(self, *args, **kwargs):
     return self.post(*args, **kwargs)
     
-def chat(request):
-  return render(request, 'blog/chat.html')
-
 class BoardDeleteMultiple(View):
   title = '게시글 선택 삭제'
   

@@ -1,4 +1,8 @@
 {% extends "blog/base.html" %}
+{% load static %}
+{% block stylesheet %}
+
+{% endblock %}
 {% block 'contents' %}
 
 
@@ -7,53 +11,34 @@
     <h2 class="main-title">글쓰기</h2>
     <p class="main-desc">내용을 입력 해주세요.</p>
 
-    <form action="" method="post" enctype="multipart/form-data" class="table write">
-        {% csrf_token %}
-        <table>
-            {{ form.as_table }}
-        </table>
-        <input type="submit">
-    </form>
-    {% comment %} <form>
-      <table class="table write">
-        <colgroup>
-          <col style="width: 120px">
-          <col>
-        </colgroup>
-        <tbody>
-          <tr>
-            <th><label for="category">카테고리</label></th>
-            <td>
-              <select id="category">
-                <option value="1">일반</option>
-                <option value="2">공지사항</option>
-              </select>
-            </td>
-          </tr>
-          <tr>
-            <th><label for="board-title">제목</label></th>
-            <td><input type="text" id="board-title" name="boardTitle"></td>
-          </tr>
-          <tr>
-            <th><label for="board-content">내용</label></th>
-            <td>
-              <textarea id="board-content"></textarea>
-            </td>
-          </tr>
-          <tr>
-            <th><label for="board-file">파일첨부</label></th>
-            <td>
-              <input type="file" id="board-file">
-            </td>
-          </tr>
-        </tbody>
-      </table>
-      <div class="btn-group">
-        <a href="./index.html" class="btn">목록</a>
-        <button type="reset" class="btn">초기화</button>
-        <button type="submit" class="btn">작성</button>
+    <form action="" method="post" enctype="multipart/form-data" class="">
+      {% csrf_token %}
+      <div class="form-floating mb-3">
+        {{ form.title }}
+        <label for="id_{{ form.title.name }}">{{ form.title.label }}</label>
       </div>
-    </form> {% endcomment %}
+      <div class="mb-3">
+      {{ form.content }}
+      </div>
+      <div class="mb-3">
+        <label for="id_{{ form.image_upload.name }}" class="form-label">{{ form.image_upload.label }}</label>
+        <div>{{ form.image_upload }}</div>
+      </div>
+      <div class="mb-3">
+        <label for="id_{{ form.file_upload.name }}" class="form-label">{{ form.file_upload.label }}</label>
+        <div>{{ form.file_upload }}</div>
+      </div>
+      <div class="mb-3">
+        <label for="id_{{ form.tags.name }}" class="form-label">{{ form.tags.label }}</label>
+        {{ form.tags }}
+      </div>
+      <div class="mb-3">
+        <label for="id_{{ form.category.name }}" class="form-label">{{ form.category.label }}</label>
+        {{ form.category }}
+      </div>
+
+      <input class="btn btn-outline-secondary" type="submit">
+    </form>
 
     <!--  //글쓰기 페이지 -->
   </div>

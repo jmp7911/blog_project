@@ -6,7 +6,7 @@ from django.contrib.auth.decorators import login_required
 from django.urls import reverse_lazy
 from django.conf import settings
 from django.contrib.auth.forms import PasswordChangeForm
-from .forms import UserJoinForm, UserProfileForm
+from .forms import UserJoinForm, UserProfileForm, UserPasswordChangeForm
 from .models import User
 
 class PageTitleViewMixin:
@@ -54,6 +54,7 @@ class ProfileUser(PageTitleViewMixin, UpdateView):
 class PasswordChangeUser(PageTitleViewMixin, PasswordChangeView):
   title = '비밀번호 변경'
   template_name = 'accounts/password_change.html'
+  form_class = UserPasswordChangeForm
   
 class PasswordChangeDoneUser(PageTitleViewMixin, PasswordChangeDoneView):
   title = '비밀번호 변경 완료'
