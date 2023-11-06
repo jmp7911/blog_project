@@ -1,4 +1,9 @@
 {% extends "blog/base.html" %}
+{% load static %}
+{% load bootstrap_icons %}
+{% block stylesheet %}
+  <link rel="stylesheet" href="{% static 'css/view.css' %}">
+{% endblock %}
 {% block 'contents' %}
 
 
@@ -17,24 +22,27 @@
           <p>작성일: {{post.created_at}}</p>|
           <p>조회수: {{post.hits}}</p>
         </div>
+        {% if post.file_upload %}
+        <div>
+          <a href="{{ post.file_upload.url }}" download>{% bs_icon 'folder' %}{{ post.file_upload }}</a>
+        </div>
+        {% endif %}
       </div>
       <div class="view-content">
         {% if post.image_upload %}
         <img src="{{post.image_upload.url}}" alt="">
         {% endif %}
 
-        
-
         <div id="viewer">{{form.content}}</div>
       </div>
       <!-- Comments Form -->
       <div class="card my-4">
-        <h5 class="card-header">Leave a Comment:</h5>
+        <h5 class="card-header">댓글</h5>
         <div class="card-body">
             <form method="POST">
               {% csrf_token %}
-              <div class="form-group">{{ comment_form }}</div>
-              <button type="submit" class="btn btn-primary">Submit</button>
+              <div class="form-group mb-3">{{ comment_form }}</div>
+              <button type="submit" class="btn btn-primary">작성</button>
             </form>
         </div>
       </div>
@@ -42,9 +50,9 @@
       {% include "blog/comment_form.html" %}
     </div>
     <div class="btn-group">
-      <a href="{% url "blog" %}" class="btn">목록</a>
-      <a href="{% url "update" post.id %}" class="btn">수정</a>
-      <a href="{% url "delete" post.id %}" class="btn">삭제</a>
+      <a href="{% url "blog" %}" class="btn btn-outline-secondary p-2 me-2">목록</a>
+      <a href="{% url "update" post.id %}" class="btn btn-outline-success p-2 me-2">수정</a>
+      <a href="{% url "delete" post.id %}" class="btn btn-outline-danger p-2 me-2">삭제</a>
     </div>
 
   </div>

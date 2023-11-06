@@ -34,6 +34,8 @@ INSTALLED_APPS = [
     # 외부 라이브러리
     'markdown',
     'django_summernote',
+    'bootstrap5',
+    'django_bootstrap_icons',
 ]
 
 AUTH_USER_MODEL = 'accounts.User'  # 추가
