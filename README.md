@@ -23,7 +23,7 @@ Python
 Django, Bootstrap, Bootstrap_icon
 * 배포
 
-[서버는 23.11.08 이후로 내립니다.](http://125.247.185.94:8000/blog)
+[서버는 23.11.08 이후로 내립니다.](http://125.247.185.94:8000/blog)
 
 ---
 <details>
@@ -116,7 +116,7 @@ gantt
     개발                   :done, des3, after des2, 7d
     프레젠테이션             :active, des4, after des3, 2d
 
-    section 개발
+    section  개발
     회원가입 기능 구현        :done,    dev1, after des2, 0d
     로그인 기능 구현           :done, 1d
     게시글 CRUD 구현        :done,crit, 2d
