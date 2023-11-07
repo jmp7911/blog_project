@@ -14,6 +14,18 @@
 - 기술 blog 만들기
 - 모놀리식 (DRF는 이 프로젝트에서 사용하지 않습니다.)
 - 데이터베이스 구조를 설계
+
+* 사용언어
+
+Python
+* 프레임워크
+
+Django, Bootstrap, Bootstrap_icon
+* 배포
+
+[링크는 23.11.08 이후로 내립니다.](http://125.247.185.94:8000/blog)
+
+---
 <details>
 <summary>1. 메인페이지 구현</summary>
 - 페이지 제목과 블로그 입장하기 버튼이 있습니다.<br>
@@ -262,7 +274,7 @@ class PageTitleViewMixin:
 ### BoardView(PageTitleViewMixin, DetailView):
 - 글 상세보기 화면 입니다.
 - Toast-Ui-Editor로 작성된 글을 마크업으로 보여줍니다
-- 선택한 글과 글에 달린 댓글들을 보여줍니다.
+- 선택한 글과 글에 달린 댓글과 대댓글을 보여줍니다.
 - get 요청 시 조회수가 1 증가합니다
 
 * comment_form.html
