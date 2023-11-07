@@ -78,8 +78,8 @@ gantt
     section 전체
     요구사항 분석            :done,    des1, 2023-10-26, 0d
     데이터베이스 설계         :done,  des2, 2023-10-26, 0d
-    개발                   :active, des3, after des2, 7d
-    프레젠테이션             :        des4, after des3, 2d
+    개발                   :done, des3, after des2, 7d
+    프레젠테이션             :active, des4, after des3, 2d
 
     section 개발
     회원가입 기능 구현        :done,    dev1, after des2, 0d
@@ -126,12 +126,12 @@ erDiagram
       varchar category FK
     }
     post ||--o{ comment : contains
+    comment ||--o{ comment : contains
     comment {
       integer id PK
-      integer parent
+      integer parent FK
       text comment
-      integer comment_order
-      integer comment_reply
+      comment comment_reply FK
       datetime created_at
       datetime updated_at
     }
@@ -149,6 +149,73 @@ erDiagram
 ```
 ---
 ### 기능명세서
+
 ---
 ### 화면 설계
+<table>
+    <tbody>
+        <tr>
+            <td>메인</td>
+            <td>로그인</td>
+        </tr>
+        <tr>
+            <td>
+                
+![main](https://github.com/jmp7911/blog_project/assets/37658328/60d88cc3-0bff-404f-b828-6bfaae765d4d)
+            </td>
+            <td>
+                ![로그인](https://github.com/jmp7911/blog_project/assets/37658328/65b7529d-aba2-4520-84bd-76ff241625ac)
+            </td>
+        </tr>
+        <tr>
+            <td>회원가입</td>
+            <td>정보수정</td>
+        </tr>
+        <tr>
+            <td>
+                ![join](https://github.com/jmp7911/blog_project/assets/37658328/10542550-27b1-422c-b73d-55b4775e2def)
+            </td>
+            <td>
+                ![profile](https://github.com/jmp7911/blog_project/assets/37658328/74b40359-df3b-42f6-9ce2-1a8b8d051b8c)
+            </td>
+        </tr>
+        <tr>
+            <td>검색</td>
+            <td>번역</td>
+        </tr>
+        <tr>
+            <td>
+                ![search](https://github.com/jmp7911/blog_project/assets/37658328/9b4a2d2e-f52e-4156-8adb-94bcd52d8d7c)
+            </td>
+            <td>
+                ![translate](https://github.com/jmp7911/blog_project/assets/37658328/24b1a364-9d1d-4bae-927c-c3dd06fbc4d6)
+            </td>
+        </tr>
+        <tr>
+            <td>선택삭제</td>
+            <td>글쓰기</td>
+        </tr>
+        <tr>
+            <td>![delete-muti](https://github.com/jmp7911/blog_project/assets/37658328/a5b97ba0-6fd1-4a32-8b7c-65ed3f34fa2f)
+            </td>
+            <td>
+                ![write](https://github.com/jmp7911/blog_project/assets/37658328/062baf3d-0c03-4e46-a6a4-d19391231508)
+            </td>
+        </tr>
+        <tr>
+            <td>글 상세보기</td>
+            <td>댓글</td>
+        </tr>
+        <tr>
+            <td>
+                ![detail](https://github.com/jmp7911/blog_project/assets/37658328/938215d9-86a2-4678-ae26-3fbedf771744)
+            </td>
+            <td>
+                ![reply](https://github.com/jmp7911/blog_project/assets/37658328/a12781ff-2763-40da-a2ea-341eae9f56e7)
+            </td>
+        </tr>
+    </tbody>
+</table>
+
+
 ---
