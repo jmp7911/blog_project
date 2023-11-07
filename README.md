@@ -130,6 +130,188 @@ gantt
 ```
 ---
 ### 프로젝트 구조
+<details>
+<summary>펼치기</summary>
+
+```sh
+tutorialproject
+ ┣ accounts
+ ┃ ┣ migrations
+ ┃ ┃ ┣ 0001_initial.py
+ ┃ ┃ ┣ 0002_alter_user_profile_image.py
+ ┃ ┃ ┣ 0003_remove_user_username.py
+ ┃ ┃ ┣ 0004_alter_user_ip_address.py
+ ┃ ┃ ┣ 0005_user_username.py
+ ┃ ┃ ┣ 0006_alter_user_email_alter_user_password_and_more.py
+ ┃ ┃ ┣ 0007_alter_user_email_alter_user_last_login_and_more.py
+ ┃ ┃ ┣ 0008_alter_user_profile_image.py
+ ┃ ┃ ┗ __init__.py
+ ┃ ┣ templates
+ ┃ ┃ ┗ accounts
+ ┃ ┃ ┃ ┣ base.html
+ ┃ ┃ ┃ ┣ join.html
+ ┃ ┃ ┃ ┣ login.html
+ ┃ ┃ ┃ ┣ password_change.html
+ ┃ ┃ ┃ ┣ password_change_done.html
+ ┃ ┃ ┃ ┗ profile.html
+ ┃ ┣ __init__.py
+ ┃ ┣ admin.py
+ ┃ ┣ apps.py
+ ┃ ┣ forms.py
+ ┃ ┣ models.py
+ ┃ ┣ tests.py
+ ┃ ┣ urls.py
+ ┃ ┗ views.py
+ ┣ blog
+ ┃ ┣ migrations
+ ┃ ┃ ┣ 0001_initial.py
+ ┃ ┃ ┣ 0002_category_tag_rename_contents_post_content_and_more.py
+ ┃ ┃ ┣ 0003_post_user.py
+ ┃ ┃ ┣ 0004_remove_post_writer.py
+ ┃ ┃ ┣ 0005_alter_comment_comment_reply.py
+ ┃ ┃ ┣ 0006_alter_comment_comment_reply_alter_post_content.py
+ ┃ ┃ ┗ __init__.py
+ ┃ ┣ templates
+ ┃ ┃ ┗ blog
+ ┃ ┃ ┃ ┣ base.html
+ ┃ ┃ ┃ ┣ chat.html
+ ┃ ┃ ┃ ┣ comment_form.html
+ ┃ ┃ ┃ ┣ post_confirm_delete.html
+ ┃ ┃ ┃ ┣ post_detail.html
+ ┃ ┃ ┃ ┣ post_form.html
+ ┃ ┃ ┃ ┣ post_list.html
+ ┃ ┃ ┃ ┗ recursive_comment.html
+ ┃ ┣ __init__.py
+ ┃ ┣ admin.py
+ ┃ ┣ apps.py
+ ┃ ┣ forms.py
+ ┃ ┣ models.py
+ ┃ ┣ tests.py
+ ┃ ┣ urls.py
+ ┃ ┗ views.py
+ ┣ django_tuieditor
+ ┃ ┣ static
+ ┃ ┣ templates
+ ┃ ┃ ┗ django_tuieditor
+ ┃ ┃ ┃ ┣ editor.html
+ ┃ ┃ ┃ ┣ static_viewer.html
+ ┃ ┃ ┃ ┗ viewer.html
+ ┃ ┣ templatetags
+ ┃ ┃ ┣ __init__.py
+ ┃ ┃ ┣ gfm.py
+ ┃ ┃ ┗ render_widget.py
+ ┃ ┣ __init__.py
+ ┃ ┣ apps.py
+ ┃ ┣ fields.py
+ ┃ ┣ models.py
+ ┃ ┗ widgets.py
+ ┣ locale
+ ┃ ┣ en
+ ┃ ┃ ┗ LC_MESSAGES
+ ┃ ┃ ┃ ┣ django.mo
+ ┃ ┃ ┃ ┗ django.po
+ ┃ ┗ ko
+ ┃ ┃ ┗ LC_MESSAGES
+ ┃ ┃ ┃ ┣ django.mo
+ ┃ ┃ ┃ ┗ django.po
+ ┣ main
+ ┃ ┣ migrations
+ ┃ ┃ ┗ __init__.py
+ ┃ ┣ templates
+ ┃ ┃ ┗ main
+ ┃ ┃ ┃ ┗ index.html
+ ┃ ┣ __init__.py
+ ┃ ┣ admin.py
+ ┃ ┣ apps.py
+ ┃ ┣ models.py
+ ┃ ┣ tests.py
+ ┃ ┣ urls.py
+ ┃ ┗ views.py
+ ┣ media
+ ┃ ┣ account
+ ┃ ┃ ┗ 2023
+ ┃ ┃ ┃ ┣ 10
+ ┃ ┃ ┃ ┃ ┣ 27
+ ┃ ┃ ┃ ┃ ┃ ┣ Untitled.png
+ ┃ ┃ ┃ ┃ ┃ ┗ Untitled_TOFcrAA.png
+ ┃ ┃ ┃ ┃ ┗ 31
+ ┃ ┃ ┃ ┃ ┃ ┣ jiman.jpg
+ ┃ ┃ ┃ ┃ ┃ ┣ 서명.jpg
+ ┃ ┃ ┃ ┃ ┃ ┗ 서명_8DVZFz8.jpg
+ ┃ ┃ ┃ ┗ 11
+ ┃ ┃ ┃ ┃ ┗ 07
+ ┃ ┃ ┃ ┃ ┃ ┗ sample_images_08.png
+ ┃ ┣ blog
+ ┃ ┃ ┗ 2023
+ ┃ ┃ ┃ ┣ 10
+ ┃ ┃ ┃ ┃ ┗ 27
+ ┃ ┃ ┃ ┃ ┃ ┣ Untitled.png
+ ┃ ┃ ┃ ┃ ┃ ┣ Untitled_1OJwIgn.png
+ ┃ ┃ ┃ ┃ ┃ ┗ Untitled_uCdv6O8.png
+ ┃ ┃ ┃ ┗ 11
+ ┃ ┃ ┃ ┃ ┣ 06
+ ┃ ┃ ┃ ┃ ┃ ┗ 서명.jpg
+ ┃ ┃ ┃ ┃ ┗ 07
+ ┃ ┃ ┃ ┃ ┃ ┣ sample_images_01.png
+ ┃ ┃ ┃ ┃ ┃ ┣ sample_images_02.png
+ ┃ ┃ ┃ ┃ ┃ ┣ sample_images_03.png
+ ┃ ┃ ┃ ┃ ┃ ┣ sample_images_04.png
+ ┃ ┃ ┃ ┃ ┃ ┣ sample_images_05.png
+ ┃ ┃ ┃ ┃ ┃ ┣ sample_images_06.png
+ ┃ ┃ ┃ ┃ ┃ ┗ sample_images_07.png
+ ┃ ┗ file
+ ┃ ┃ ┗ 2023
+ ┃ ┃ ┃ ┗ 11
+ ┃ ┃ ┃ ┃ ┗ 06
+ ┣ migrations
+ ┃ ┗ __init__.py
+ ┣ static
+ ┃ ┣ css
+ ┃ ┃ ┣ chat.css
+ ┃ ┃ ┣ common.css
+ ┃ ┃ ┣ list.css
+ ┃ ┃ ┣ login-join.css
+ ┃ ┃ ┣ table.css
+ ┃ ┃ ┣ view.css
+ ┃ ┃ ┗ write.css
+ ┃ ┣ django_tuieditor
+ ┃ ┃ ┣ codemirror.css
+ ┃ ┃ ┣ codemirror.js
+ ┃ ┃ ┣ django-fixes.css
+ ┃ ┃ ┣ django-fixes.js
+ ┃ ┃ ┣ toastui-editor-viewer.css
+ ┃ ┃ ┣ toastui-editor-viewer.js
+ ┃ ┃ ┣ toastui-editor.css
+ ┃ ┃ ┗ toastui-editor.js
+ ┃ ┗ img
+ ┃ ┃ ┣ default_user.jpg
+ ┃ ┃ ┣ est.jpg
+ ┃ ┃ ┣ first.png
+ ┃ ┃ ┣ icon-search.png
+ ┃ ┃ ┣ icon-x.png
+ ┃ ┃ ┣ last.png
+ ┃ ┃ ┣ licat.png
+ ┃ ┃ ┣ next.png
+ ┃ ┃ ┗ prev.png
+ ┣ tutorialproject
+ ┃ ┣ __init__.py
+ ┃ ┣ asgi.py
+ ┃ ┣ settings.py
+ ┃ ┣ urls.py
+ ┃ ┗ wsgi.py
+ ┣ __init__.py
+ ┣ admin.py
+ ┣ apps.py
+ ┣ db.sqlite3
+ ┣ manage.py
+ ┣ models.py
+ ┣ nohup.out
+ ┣ requirements.txt
+ ┣ tests.py
+ ┗ views.py
+```
+</details>
+
 - 4가지의 커스텀 앱과 2개의 외부 라이브러리를 사용합니다.
 ```python
 INSTALLED_APPS = [
