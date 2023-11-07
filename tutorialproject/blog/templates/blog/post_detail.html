@@ -30,7 +30,7 @@
       </div>
       <div class="view-content">
         {% if post.image_upload %}
-        <img src="{{post.image_upload.url}}" alt="">
+        <img class="card-img-top overflow-hidden" src="{{post.image_upload.url}}" alt="">
         {% endif %}
 
         <div id="viewer">{{form.content}}</div>

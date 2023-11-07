@@ -78,7 +78,7 @@ class BoardList(PageTitleViewMixin, ListView):
     ordering = ['-'+sort]
     return ordering
 
-class BoardWrite(PageTitleViewMixin, CreateView):
+class BoardWrite(PageTitleViewMixin, PermissionRequiredMixin, CreateView):
   form_class = PostForm
   permission_required = 'blog.add_post'
   title = '게시글 작성'
@@ -170,8 +170,8 @@ class BoardDeleteMultiple(View):
     print(f'request: {self.request.POST}')
     
     if self.request.user.is_staff:
-      data = self.request.POST.get('data[]')
-      
+      data = self.request.POST.getlist('data[]')
+
       Post.objects.filter(id__in=data).delete()
     return redirect('blog')
 
