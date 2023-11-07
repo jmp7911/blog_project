@@ -231,7 +231,7 @@ class Comment(models.Model):
 ---
 ### 기능명세서
 - CBV(Class Based View)로 작성되었습니다.
-# 공통 상속 클래스
+### PageTitleViewMixin: 공통 상속 클래스
 - 페이지의 제목을 나타내는 클래스를 만들고 모든 View가 상속하도록 했습니다.
 ```python
 class PageTitleViewMixin:
@@ -245,61 +245,102 @@ class PageTitleViewMixin:
     return context
 ```
 
-# BoardList(PageTitleViewMixin, ListView)
+### BoardList(PageTitleViewMixin, ListView): 
 - 작성된 글의 리스트화면 입니다.
 - 페이지네이션, 검색, 삭제(관리자) 기능이 있습니다.
-```python
-  def get_context_data(self, **kwargs):
-    context = super().get_context_data(**kwargs)
-    count = len(self.object_list)
-    category = Category.objects.all()
+
+
+### BoardWrite(PageTitleViewMixin, PermissionRequiredMixin, CreateView):
+- 글 쓰기 화면 입니다.
+- 쓰기 권한을 검사합니다.
+- Toast-Ui-Editor 폼양식을 사용합니다.
+
+### BoardUpdate(PageTitleViewMixin, PermissionRequiredMixin, UpdateView):
+- 글 수정 화면입니다.
+- 수정 권한을 검사합니다.
+
+### BoardView(PageTitleViewMixin, DetailView):
+- 글 상세보기 화면 입니다.
+- Toast-Ui-Editor로 작성된 글을 마크업으로 보여줍니다
+- 선택한 글과 글에 달린 댓글들을 보여줍니다.
+- get 요청 시 조회수가 1 증가합니다
+
+* comment_form.html
+```html
+
+<div class="media mb-4" id="comment_id_{{ comment.id }}">
+  <div class="media-body">
+    <h5>{{comment.user.get_image_tag}}<a class="btn btn-outline-success m-2" href="{{post.get_absolute_url}}?comment={{comment.id}}">Reply</a></h5>
+    <h5 class="mt-0">{{comment.user}}</h5>
+    <h5 class="mt-0">{{comment.created_at}}</h5>
+    <h5 class="mt-0 bg-light text-body">{{comment.content}}</h5>
     
-    context['count'] = count
-    context['category'] = category
-    
-    return context
+    {% for reply in comment.replies.all %}
+      <div class="ms-4">
+      {% include 'blog/recursive_comment.html' with comment=reply %}
+      </div>
+    {% endfor %}
+  
+  </div>
+</div>
 ```
+* recursive_comment.html
+```html
+<div class="media mb-4" id="comment_id_{{ comment.id }}">
+  <div class="media-body">
+    <h5>{{comment.user.get_image_tag}}<a class="btn btn-outline-success m-2" href="{{post.get_absolute_url}}?comment={{comment.id}}">Reply</a></h5>
+    <h5 class="mt-0">{{comment.user}}</h5>
+    <h5 class="mt-0">{{comment.created_at}}</h5>
+    <h5 class="mt-0 bg-light text-body">{{comment.content}}</h5>
+    
+      {% for reply in comment.replies.all %}
+        <div class="ms-4">
+        {% include 'blog/recursive_comment.html' with comment=reply %}
+        </div>
+      {% endfor %}
+    
+  </div>
+</div>
+```
+
+### BoardDelete(PageTitleViewMixin, PermissionRequiredMixin, DeleteView):
+- 글 삭제 View 입니다. 삭제권한을 확인합니다.
+
+### BoardDeleteMultiple(View):
+- 선택삭제 View 입니다. 관리자권한을 확인합니다.
+- post 요청 시 넘겨진 Post.id 값으로 삭제 합니다.
+
+### JoinUser(PageTitleViewMixin, CreateView):
+- 회원가입 화면 입니다.
 ```python
-def get_context_data(self, **kwargs):
-    ...
-    context = super().get_context_data(**kwargs)
-    search = self.request.GET.get('search', '')
-    sel_category = self.request.GET.get('category', '')
-    sort = self.request.GET.get('sort', '')
+class CustomUserManager(UserManager):
+    def _create_user(self, email, password, **extra_fields):
+        if not email:
+          raise ValueError('이메일은 필수입니다.')
+        email = self.normalize_email(email)
+        user = self.model(
+          email = email,
+          **extra_fields,
+        )
         
-    if search:
-      context['search'] = search
-    if sel_category:
-      category = category.extra(select={'is_sel_category':'id = '+sel_category})
-    
-    context['category'] = category
-    context['sort'] = sort
-
-    return context
-```
-```python
-  def get_queryset(self):
-    queryset = super().get_queryset().annotate(number_of_comments=Count('comment'))
-    
-    search = self.request.GET.get('search', '')
-    cate = self.request.GET.get('category', '')
-    
-    q = Q()
-    if search:
-      q &= (Q(title__icontains=search) | Q(content__icontains=search))
-    if cate:
-      q &= Q(category=cate)
-
-    return queryset.filter(q)
-```
-```python
-  def get_ordering(self):
-    sort = self.request.GET.get('sort', 'created_at')
-    ordering = ['-'+sort]    # sort = 'hits' or 'created_at'
-    return ordering
+        user.set_password(password) # Hash
+        user.save(using=self._db)
+        return user
 ```
 
-# BoardWrite(PageTitleViewMixin, CreateView)
+### loginUser(PageTitleViewMixin, LoginView):
+- 로그인 화면 입니다.
+
+### ProfileUser(PageTitleViewMixin, UpdateView):
+- 유저정보 화면 입니다. 로그인 권한을 검사합니다.
+- 정보 수정 기능이 있습니다.
+
+### PasswordChangeUser(PageTitleViewMixin, PasswordChangeView):
+- 비밀번호 변경 화면입니다. 로그인 권한을 검사합니다.
+
+### PasswordChangeDoneUser(PageTitleViewMixin, PasswordChangeDoneView):
+- 비밀번호 변경 완료 화면입니다. 로그인 권한을 검사합니다.
+
 
 ---
 ### 화면 설계
