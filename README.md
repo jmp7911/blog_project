@@ -23,7 +23,7 @@ Python
 Django, Bootstrap, Bootstrap_icon
 * 배포
 
-[링크는 23.11.08 이후로 내립니다.](http://125.247.185.94:8000/blog)
+[서버는 23.11.08 이후로 내립니다.](http://125.247.185.94:8000/blog)
 
 ---
 <details>
