@@ -118,6 +118,32 @@ gantt
 ```
 ---
 ### 프로젝트 구조
+- 4가지의 커스텀 앱과 2개의 외부 라이브러리를 사용합니다.
+```python
+INSTALLED_APPS = [
+    ...
+    # 커스텀 앱
+    'blog.apps.BlogConfig',
+    'accounts.apps.AccountsConfig',
+    'main.apps.MainConfig',
+    'django_tuieditor.apps.DjangoTUIEditorConfig',
+    # 외부 라이브러리
+    'bootstrap5',
+    'django_bootstrap_icons',
+]
+
+```
+- urls.py
+```python
+urlpatterns = [
+    path('admin/', admin.site.urls),
+    path('', include('main.urls')),
+    path('blog/', include('blog.urls')),
+    path('accounts/', include('accounts.urls')),
+    path('i18n/', include('django.conf.urls.i18n')),
+]
+```
+
 ---
 ### 데이터베이스 구조
 ```mermaid
@@ -170,8 +196,110 @@ erDiagram
       varchar name
     }
 ```
+- python modeling
+```python
+class Category(models.Model):
+  name = models.CharField(max_length=100, unique=True)
+    
+class Tag(models.Model):
+  name = models.CharField(max_length=100, unique=True)
+    
+class Post(BaseModel):
+  title = models.CharField(max_length=100)
+  content = MarkdownField()
+  image_upload = models.ImageField(verbose_name='이미지',upload_to='blog/%Y/%m/%d/', blank=True, null=True)
+  file_upload = models.FileField(verbose_name='파일',upload_to='file/%Y/%m/%d/', blank=True, null=True)
+  created_at = models.DateTimeField(auto_now_add=True)
+  updated_at = models.DateTimeField(auto_now=True)
+  user = models.ForeignKey(User, on_delete=models.CASCADE, default='')
+  hits = models.IntegerField(default=0)
+  category = models.ForeignKey(Category, blank=True, null=True ,on_delete=models.CASCADE)
+  tags = models.ManyToManyField(Tag, blank=True)
+
+class Comment(models.Model):
+  post = models.ForeignKey(Post, on_delete=models.CASCADE)
+  comment_reply = models.ForeignKey('self', null=True, blank=True, on_delete=models.CASCADE, related_name='replies')
+  comment_order = models.IntegerField(null=True, blank=True)
+  user = models.ForeignKey(User, on_delete=models.CASCADE)
+  content = models.TextField()
+  created_at = models.DateTimeField(auto_now_add=True)
+  updated_at = models.DateField(auto_now=True)
+
+
+```
+
 ---
 ### 기능명세서
+- CBV(Class Based View)로 작성되었습니다.
+# 공통 상속 클래스
+- 페이지의 제목을 나타내는 클래스를 만들고 모든 View가 상속하도록 했습니다.
+```python
+class PageTitleViewMixin:
+  title = ""
+
+  def get_title(self):
+    return self.title
+  def get_context_data(self, **kwargs):
+    context = super().get_context_data(**kwargs)
+    context['title'] = self.get_title()
+    return context
+```
+
+# BoardList(PageTitleViewMixin, ListView)
+- 작성된 글의 리스트화면 입니다.
+- 페이지네이션, 검색, 삭제(관리자) 기능이 있습니다.
+```python
+  def get_context_data(self, **kwargs):
+    context = super().get_context_data(**kwargs)
+    count = len(self.object_list)
+    category = Category.objects.all()
+    
+    context['count'] = count
+    context['category'] = category
+    
+    return context
+```
+```python
+def get_context_data(self, **kwargs):
+    ...
+    context = super().get_context_data(**kwargs)
+    search = self.request.GET.get('search', '')
+    sel_category = self.request.GET.get('category', '')
+    sort = self.request.GET.get('sort', '')
+        
+    if search:
+      context['search'] = search
+    if sel_category:
+      category = category.extra(select={'is_sel_category':'id = '+sel_category})
+    
+    context['category'] = category
+    context['sort'] = sort
+
+    return context
+```
+```python
+  def get_queryset(self):
+    queryset = super().get_queryset().annotate(number_of_comments=Count('comment'))
+    
+    search = self.request.GET.get('search', '')
+    cate = self.request.GET.get('category', '')
+    
+    q = Q()
+    if search:
+      q &= (Q(title__icontains=search) | Q(content__icontains=search))
+    if cate:
+      q &= Q(category=cate)
+
+    return queryset.filter(q)
+```
+```python
+  def get_ordering(self):
+    sort = self.request.GET.get('sort', 'created_at')
+    ordering = ['-'+sort]    # sort = 'hits' or 'created_at'
+    return ordering
+```
+
+# BoardWrite(PageTitleViewMixin, CreateView)
 
 ---
 ### 화면 설계
