@@ -5,39 +5,41 @@
 {% endblock %}
 {% load humanize %}
 {% block 'contents' %}
-  <div class="main">
-    <h2 class="main-title">게시판</h2>
+  <div class="container-sm">
+    <div class="row">
+      <h2 class="main-title">게시판</h2>
 
-    <div class="d-flex justify-content-between">
-      <p class="main-desc"><strong>{{ count }} 개</strong>의 게시글이 있습니다.</p>
-      <div class="p-2">
-        <nav class="navbar navbar-expand-lg navbar-light bg-light">
-          <div class="container-fluid">
-            <div class="collapse navbar-collapse" id="navbarSupportedContent">
-              <form>
-                <div class="d-flex">
-                  <select class="form-select me-2" name="category" id="category">
-                    <option value="">전체</option>
-                    {% for cate in category %}
-                    <option value="{{cate.id}}" {% if cate.is_sel_category %}selected{% endif %}>{{cate}}</option>
-                    {% endfor %}
-                  </select>
-                  <input class="form-control me-2 flex-grow-2" id="search" type="search" name="search" value="{{search}}" placeholder="search" >
-                  <button class="btn btn-outline-success me-2" type="submit">Search</button>
-                  <label for="sort" class="a11y-hidden">정렬</label>
-                  <select class="form-select me-2" id="sort" name="sort" onchange="form.submit()">
-                    <option value="hits" {% if sort == 'hits' %}selected{% endif %}>조회순</option>
-                    <option value="created_at" {% if sort == 'created_at' %}selected{% endif %}>최신순</option>
-                  </select>
-                </div>
-              </form>
+      <div class="d-flex justify-content-between">
+        <p class="main-desc"><strong>{{ count }} 개</strong>의 게시글이 있습니다.</p>
+        <div class="p-2">
+          <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <div class="container-fluid">
+              <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <form>
+                  <div class="d-flex">
+                    <select class="form-select me-2" name="category" id="category">
+                      <option value="">전체</option>
+                      {% for cate in category %}
+                      <option value="{{cate.id}}" {% if cate.is_sel_category %}selected{% endif %}>{{cate}}</option>
+                      {% endfor %}
+                    </select>
+                    <input class="form-control me-2 flex-grow-2" id="search" type="search" name="search" value="{{search}}" placeholder="search" >
+                    <button class="btn btn-outline-success me-2" type="submit">Search</button>
+                    <label for="sort" class="a11y-hidden">정렬</label>
+                    <select class="form-select me-2" id="sort" name="sort" onchange="form.submit()">
+                      <option value="hits" {% if sort == 'hits' %}selected{% endif %}>조회순</option>
+                      <option value="created_at" {% if sort == 'created_at' %}selected{% endif %}>최신순</option>
+                    </select>
+                  </div>
+                </form>
+              </div>
             </div>
-          </div>
-        </nav>
+          </nav>
+        </div>
       </div>
     </div>
     <!-- 게시판 리스트 -->
-    <div class="container">
+    <div class="">
       {% block postList %}
         <div class="row text-center">
         <!-- 게시글이 없을때 / 검색한 게시글이 없을때 -->
@@ -48,13 +50,13 @@
         {% else %}
         <!-- 게시글이 있을때 -->
         {% for post in post_list %}
-          <div class="col-4 mb-4">
+          <div class="col-lg-4 col-md-4 col-sm-4 mb-4">
             {% if request.user.is_authenticated %}
             <div class="d-inline align-self-start p-1">
               <input type="checkbox" class="post_check" value="{{post.id}}">
             </div>
             {% endif %}
-            <div class="card" style="max-height:532px">
+            <div class="card" style="height:332px">
               <a href="{{post.get_absolute_url}}" class="overflow-hidden"><img src="{% if post.image_upload %}{{ post.image_upload.url }}{% endif %}" class="card-img-top" alt="..."></a>
               <div class="card-body border-top">
                 <h5 class="card-title"><a href="{{post.get_absolute_url}}">{{post.title}}
@@ -110,21 +112,10 @@
     </div>
   </div>
   <script>
-    document.getElementById('all-article').addEventListener('click', function() {
-      if (this.checked) {
-        document.querySelectorAll('.post_check').forEach((item, index) => {
-          item.checked = true
-        })
-      } else {
-        document.querySelectorAll('.post_check').forEach((item, index) => {
-          item.checked = false
-        })
-      }
-    })
     function sel_delete() {
       ids = []
       document.querySelectorAll('.post_check:checked').forEach((item, index) => {
-        ids.push(item.value)
+        ids.push(Number(item.value))
       })
       
       

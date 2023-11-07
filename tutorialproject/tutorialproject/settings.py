@@ -32,8 +32,6 @@ INSTALLED_APPS = [
     'main.apps.MainConfig',
     'django_tuieditor.apps.DjangoTUIEditorConfig',
     # 외부 라이브러리
-    'markdown',
-    'django_summernote',
     'bootstrap5',
     'django_bootstrap_icons',
 ]
