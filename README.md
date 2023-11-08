@@ -549,9 +549,13 @@ class PageTitleViewMixin:
 ### 관련 이슈
 
 * 댓글
-- 댓글과 대댓글을 재귀로 호출하였습니다.
-- models.py ForeinKey는 'self'로 자기자신을 참조하고 related_name으로 자신을 참조하는 댓글을 호출했습니다.
-* comment_form.html
+
+댓글과 대댓글을 재귀로 호출하였습니다.
+
+models.py ForeinKey는 'self'로 자기자신을 참조하고 related_name으로 자신을 참조하는 댓글을 호출했습니다.
+
+comment_form.html
+
 ```html
 
 <div class="media mb-4" id="comment_id_{{ comment.id }}">
@@ -570,7 +574,9 @@ class PageTitleViewMixin:
   </div>
 </div>
 ```
-* recursive_comment.html
+
+recursive_comment.html
+
 ```html
 <div class="media mb-4" id="comment_id_{{ comment.id }}">
   <div class="media-body">
@@ -590,8 +596,11 @@ class PageTitleViewMixin:
 ```
 
 * 회원가입 시 패스워드 해싱
-- 회원가입 완료 후 로그인이 되지 않음
-- UserManager > create_user 에서 set_password 를 적용했습니다.
+
+회원가입 완료 후 로그인이 되지 않음
+
+UserManager > create_user 에서 set_password 를 적용했습니다.
+
 ```python
 class CustomUserManager(UserManager):
     def _create_user(self, email, password, **extra_fields):
