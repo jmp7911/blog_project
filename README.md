@@ -11,7 +11,7 @@
 ---
 ### 요구사항명세
 - 프로젝트 일정: 10월 26일(목) ~ 11월 7일(화)
-- 11월 8일 개별 발표(개인당 5분)
+- 11월 8일 개별 발표
 - 기술 blog 만들기
 - 모놀리식 (DRF는 이 프로젝트에서 사용하지 않습니다.)
 - 데이터베이스 구조를 설계
@@ -385,38 +385,6 @@ erDiagram
       varchar name
     }
 ```
-- blog:models.py
-```python
-class Category(models.Model):
-  name = models.CharField(max_length=100, unique=True)
-    
-class Tag(models.Model):
-  name = models.CharField(max_length=100, unique=True)
-    
-class Post(BaseModel):
-  title = models.CharField(max_length=100)
-  content = MarkdownField()
-  image_upload = models.ImageField(verbose_name='이미지',upload_to='blog/%Y/%m/%d/', blank=True, null=True)
-  file_upload = models.FileField(verbose_name='파일',upload_to='file/%Y/%m/%d/', blank=True, null=True)
-  created_at = models.DateTimeField(auto_now_add=True)
-  updated_at = models.DateTimeField(auto_now=True)
-  user = models.ForeignKey(User, on_delete=models.CASCADE, default='')
-  hits = models.IntegerField(default=0)
-  category = models.ForeignKey(Category, blank=True, null=True ,on_delete=models.CASCADE)
-  tags = models.ManyToManyField(Tag, blank=True)
-
-class Comment(models.Model):
-  post = models.ForeignKey(Post, on_delete=models.CASCADE)
-  comment_reply = models.ForeignKey('self', null=True, blank=True, on_delete=models.CASCADE, related_name='replies')
-  comment_order = models.IntegerField(null=True, blank=True)
-  user = models.ForeignKey(User, on_delete=models.CASCADE)
-  content = models.TextField()
-  created_at = models.DateTimeField(auto_now_add=True)
-  updated_at = models.DateField(auto_now=True)
-
-
-```
-
 ---
 ### 기능명세서
 - CBV(Class Based View)로 작성되었습니다.
@@ -554,6 +522,17 @@ class PageTitleViewMixin:
 댓글과 대댓글을 재귀로 호출하였습니다.
 
 Comment 모델의 ForeinKey는 'self'로 자기자신을 참조하고 related_name으로 자신을 참조하는 댓글을 호출했습니다.
+
+```python
+class Comment(models.Model):
+  post = models.ForeignKey(Post, on_delete=models.CASCADE)
+  comment_reply = models.ForeignKey('self', null=True, blank=True, on_delete=models.CASCADE, related_name='replies')
+  comment_order = models.IntegerField(null=True, blank=True)
+  user = models.ForeignKey(User, on_delete=models.CASCADE)
+  content = models.TextField()
+  created_at = models.DateTimeField(auto_now_add=True)
+  updated_at = models.DateField(auto_now=True)
+```
 
 comment_form.html
 
