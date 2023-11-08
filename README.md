@@ -546,6 +546,49 @@ class PageTitleViewMixin:
 
 
 ---
+### 관련 이슈
+
+* 댓글
+- 댓글과 대댓글을 재귀로 호출하였습니다.
+- models.py ForeinKey는 'self'로 자기자신을 참조하고 related_name으로 자신을 참조하는 댓글을 호출했습니다.
+* comment_form.html
+```html
+
+<div class="media mb-4" id="comment_id_{{ comment.id }}">
+  <div class="media-body">
+    <h5>{{comment.user.get_image_tag}}<a class="btn btn-outline-success m-2" href="{{post.get_absolute_url}}?comment={{comment.id}}">Reply</a></h5>
+    <h5 class="mt-0">{{comment.user}}</h5>
+    <h5 class="mt-0">{{comment.created_at}}</h5>
+    <h5 class="mt-0 bg-light text-body">{{comment.content}}</h5>
+
+    {% for reply in comment.replies.all %}
+      <div class="ms-4">
+      {% include 'blog/recursive_comment.html' with comment=reply %}
+      </div>
+    {% endfor %}
+
+  </div>
+</div>
+```
+* recursive_comment.html
+```html
+<div class="media mb-4" id="comment_id_{{ comment.id }}">
+  <div class="media-body">
+    <h5>{{comment.user.get_image_tag}}<a class="btn btn-outline-success m-2" href="{{post.get_absolute_url}}?comment={{comment.id}}">Reply</a></h5>
+    <h5 class="mt-0">{{comment.user}}</h5>
+    <h5 class="mt-0">{{comment.created_at}}</h5>
+    <h5 class="mt-0 bg-light text-body">{{comment.content}}</h5>
+
+      {% for reply in comment.replies.all %}
+        <div class="ms-4">
+        {% include 'blog/recursive_comment.html' with comment=reply %}
+        </div>
+      {% endfor %}
+
+  </div>
+</div>
+```
+---
 ### 회고
 - 잘한점/기억에 남는 점
 
