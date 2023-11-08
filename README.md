@@ -588,6 +588,25 @@ class PageTitleViewMixin:
   </div>
 </div>
 ```
+
+* 회원가입 시 패스워드 해싱
+- 회원가입 완료 후 로그인이 되지 않음
+- UserManager > create_user 에서 set_password 를 적용했습니다.
+```python
+class CustomUserManager(UserManager):
+    def _create_user(self, email, password, **extra_fields):
+        if not email:
+          raise ValueError('이메일은 필수입니다.')
+        email = self.normalize_email(email)
+        user = self.model(
+          email = email,
+          **extra_fields,
+        )
+
+        user.set_password(password) # Hash
+        user.save(using=self._db)
+        return user
+```
 ---
 ### 회고
 - 잘한점/기억에 남는 점
