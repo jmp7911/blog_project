@@ -553,7 +553,7 @@ class PageTitleViewMixin:
 
 댓글과 대댓글을 재귀로 호출하였습니다.
 
-models.py ForeinKey는 'self'로 자기자신을 참조하고 related_name으로 자신을 참조하는 댓글을 호출했습니다.
+Comment 모델의 ForeinKey는 'self'로 자기자신을 참조하고 related_name으로 자신을 참조하는 댓글을 호출했습니다.
 
 comment_form.html
 
