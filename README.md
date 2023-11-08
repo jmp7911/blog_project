@@ -462,21 +462,6 @@ class PageTitleViewMixin:
 
 ### JoinUser(PageTitleViewMixin, CreateView):
 - 회원가입 화면 입니다.
-```python
-class CustomUserManager(UserManager):
-    def _create_user(self, email, password, **extra_fields):
-        if not email:
-          raise ValueError('이메일은 필수입니다.')
-        email = self.normalize_email(email)
-        user = self.model(
-          email = email,
-          **extra_fields,
-        )
-        
-        user.set_password(password) # Hash
-        user.save(using=self._db)
-        return user
-```
 
 ### loginUser(PageTitleViewMixin, LoginView):
 - 로그인 화면 입니다.
