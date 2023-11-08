@@ -391,7 +391,7 @@ erDiagram
       varchar name
     }
 ```
-- python modeling
+- blog:models.py
 ```python
 class Category(models.Model):
   name = models.CharField(max_length=100, unique=True)
