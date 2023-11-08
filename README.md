@@ -457,7 +457,7 @@ class PageTitleViewMixin:
 ### BoardView(PageTitleViewMixin, DetailView):
 - 글 상세보기 화면 입니다.
 - Toast-Ui-Editor로 작성된 글을 마크업으로 보여줍니다
-- 선택한 글과 글에 달린 댓글과 대댓글을 보여줍니다.
+- 선택한 글과 글에 달린 댓글과 대댓글을 보여줍니다.
 - get 요청 시 조회수가 1 증가합니다
 
 * comment_form.html
